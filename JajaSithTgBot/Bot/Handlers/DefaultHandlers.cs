@@ -23,7 +23,7 @@ namespace JajaSithTgBot.Bot.Handlers
 
         [Required]
         [NotNull]
-        public ResponseHandler? Handler { get; set; }
+        public ResponseHandler? ResponseHandler { get; set; }
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             await Task.Factory.StartNew(() =>
@@ -31,7 +31,7 @@ namespace JajaSithTgBot.Bot.Handlers
                 switch (update?.Message?.Text)
                 {
                     case not null:
-                        Handler.Handle(botClient, update.Message.Chat.Id, update.Message.Text, "@" + update.Message.Chat.Username);
+                        ResponseHandler.Handle(botClient, update.Message.Chat.Id, update.Message.Text, "@" + update.Message.Chat.Username);
                         break;
                     default:
                         break;

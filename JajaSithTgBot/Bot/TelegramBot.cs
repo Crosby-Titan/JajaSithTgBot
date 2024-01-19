@@ -34,7 +34,7 @@ namespace JajaSithTgBot.Bot
                         ChatId = ChatId,
                         LogFormatter = new DefaultErrorLogFormatter(),
                         Logger = new DefaultLogger(),
-                        Handler = new ResponseHandler(new DefaultPostHandler(), new DefaultContentSelector(), ChatId)
+                        ResponseHandler = new ResponseHandler(new DefaultPostHandler(), new DefaultContentSelector(), ChatId)
                     };
 
                     return _Handler;
