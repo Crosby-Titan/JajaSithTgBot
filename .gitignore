@@ -366,5 +366,4 @@ FodyWeavers.xsd
 Data/Telegram
 
 # Specified Content
-Data/Content/арт
-Data/Content/видео
+Data/Content/
