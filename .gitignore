@@ -362,8 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Telegram bot information
-Data/Telegram/
-
-# Specified Content
-Data/Content/
+# Data
+Data/
