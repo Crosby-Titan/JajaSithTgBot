@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Telegram bot information
-Data/Telegram
+Data/Telegram/
 
 # Specified Content
 Data/Content/
