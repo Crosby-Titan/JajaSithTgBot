@@ -23,7 +23,7 @@ namespace JajaSithTgBot.Bot
 
         public ChatId ChatId { get { return new ChatId(_ChatID.Username ?? throw new ArgumentException()); } }
 
-        public IHandler Handler
+        public IHandler? Handler
         {
             get
             {
@@ -47,7 +47,7 @@ namespace JajaSithTgBot.Bot
 
         public async Task StartReceiveAsync(ReceiverOptions? options = default)
         {
-            if (_Client == null)
+            if (_Client == null || Handler == null)
                 throw new NullReferenceException();
 
             await Task.Run(() =>
@@ -62,19 +62,7 @@ namespace JajaSithTgBot.Bot
 
         public void Dispose()
         {
-            _CancelToken.Cancel();
-
-            try
-            {
-                _CancelToken.Token.ThrowIfCancellationRequested();
-            }
-            catch
-            {
-
-            }
-
-            _Client.CloseAsync();
-            _CancelToken.Dispose();
+            _Client.CloseAsync(_CancelToken.Token).Wait();
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IDataLoader
     {
-        T Load<T>(Stream obj);
+        T? Load<T>(Stream obj);
     }
 }

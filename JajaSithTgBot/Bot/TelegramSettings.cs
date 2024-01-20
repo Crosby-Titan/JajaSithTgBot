@@ -1,14 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using JajaSithTgBot.Bot.Attributes;
+using System.Text.Json.Serialization;
 
 namespace JajaSithTgBot.Bot
 {
-    public class Service
+    public class TelegramSettings
     {
         [JsonPropertyName("telegram_info")]
-        public TelegramBotInformation Information { get; set; }
+        [SettingsValidation]
+        public RequiredInformation Information { get; set; }
     }
 
-    public struct TelegramBotInformation
+    public struct RequiredInformation
     {
         [JsonPropertyName("api_key")]
         public string ApiKey { get; set; }
