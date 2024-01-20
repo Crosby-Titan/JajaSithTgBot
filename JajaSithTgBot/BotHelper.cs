@@ -4,6 +4,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot;
 using JajaSithTgBot.Bot.Handlers;
 using JajaSithTgBot.Bot.Paths;
+using JajaSithTgBot.Bot.Attributes;
 
 namespace JajaSithTgBot
 {
@@ -31,6 +32,9 @@ namespace JajaSithTgBot
 
         private static void InitializeBot(TelegramSettings settings,IHandler? handler = default)
         {
+            if(!SettingsValidator.Validate<TelegramSettings,SettingsValidationAttribute>(settings))
+                throw new ArgumentException(null, nameof(settings));
+
             _Bot = new TelegramBot(new TelegramBotClient(settings.Information.ApiKey), settings.Information.ChannelID)
             {
                 Handler = handler
