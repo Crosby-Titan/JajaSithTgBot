@@ -39,8 +39,7 @@ namespace JajaSithTgBot.Bot.Handlers
         {
             switch (message.ToLower())
             {
-                case "/start":
-                    break;
+
                 case "check media":
                     if (_ContentSelector.IsContentAvailable("арт", DateTime.Now) || _ContentSelector.IsContentAvailable("видео", DateTime.Now))
                     {
@@ -49,31 +48,36 @@ namespace JajaSithTgBot.Bot.Handlers
                     else
                         botClient.SendTextMessageAsync(id, "New content is not available.");
                     break;
+
                 case "post media":
 
-                    //if (_ContentSelector.IsContentAvailable("арт", DateTime.Now))
-                    //    goto case "photo";
+                    if (_ContentSelector.IsContentAvailable("арт", DateTime.Now))
+                    {
+                        Parallel.ForEach(_ContentSelector.GetContent("арт", DateTime.Now), x =>
+                        {
+                            _PostHandler.PostAsync(botClient, MediaHelper.GetSortedMedia(x), _ChatId);
+                        });
+                    }
 
                     if (_ContentSelector.IsContentAvailable("видео", DateTime.Now))
-                        goto case "video";
+                    {
+                        Parallel.ForEach(_ContentSelector.GetContent("видео", DateTime.Now), x =>
+                        {
+                            _PostHandler.PostAsync(botClient, MediaHelper.GetSortedMedia(x), _ChatId);
+                        });
+                    }
 
                     break;
-                case "photo":
-                    Parallel.ForEach(_ContentSelector.GetContent("арт", DateTime.Now), x =>
-                    {
-                        _PostHandler.PostAsync(botClient, MediaHelper.GetSortedMedia(x), _ChatId);
-                    });
-                    break;
-                case "video":
-                    Parallel.ForEach(_ContentSelector.GetContent("видео", DateTime.Now), x =>
-                    {
-                        _PostHandler.PostAsync(botClient, MediaHelper.GetSortedMedia(x), _ChatId);
-                    });
-                    break;
+
                 default:
                     botClient.SendTextMessageAsync(id, "Invalid command");
                     break;
             }
+        }
+
+        private void UserCommands(ITelegramBotClient botClient,ChatId id,string message)
+        {
+
         }
 
         private bool IsUserAdnim(string username)

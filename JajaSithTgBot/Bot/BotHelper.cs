@@ -1,12 +1,11 @@
 ﻿using JajaSithTgBot.Bot.JSON;
-using JajaSithTgBot.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot;
 using JajaSithTgBot.Bot.Handlers;
 using JajaSithTgBot.Bot.Paths;
 using JajaSithTgBot.Bot.Attributes;
 
-namespace JajaSithTgBot
+namespace JajaSithTgBot.Bot
 {
     public class BotHelper
     {
@@ -30,9 +29,9 @@ namespace JajaSithTgBot
             _Bot?.Dispose();
         }
 
-        private static void InitializeBot(TelegramSettings settings,IHandler? handler = default)
+        private static void InitializeBot(TelegramSettings settings, IHandler? handler = default)
         {
-            if(!SettingsValidator.Validate<TelegramSettings,SettingsValidationAttribute>(settings))
+            if (!SettingsValidator.Validate<TelegramSettings, SettingsValidationAttribute>(settings))
                 throw new ArgumentException(null, nameof(settings));
 
             _Bot = new TelegramBot(new TelegramBotClient(settings.Information.ApiKey), settings.Information.ChannelID)
@@ -41,9 +40,9 @@ namespace JajaSithTgBot
             };
         }
 
-        public static TelegramSettings? LoadSettigs()
+        public static TelegramSettings? LoadSettigs(string filename)
         {
-            return _Loader.Load<TelegramSettings>(File.OpenRead(Path.Combine(PathWorker.Telegram, "telegram_info.json")));
+            return _Loader.Load<TelegramSettings>(File.OpenRead(Path.Combine(PathWorker.Telegram, filename)));
         }
     }
 }

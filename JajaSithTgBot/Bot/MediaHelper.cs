@@ -1,18 +1,21 @@
 ﻿using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using JajaSithTgBot.Bot.Content;
+using System.Runtime.CompilerServices;
+using JajaSithTgBot.Bot.Extensions;
 
 namespace JajaSithTgBot.Bot
 {
     public class MediaHelper
     {
+        private static readonly MediaHelper _Helper = new MediaHelper();
         public static IEnumerable<InputMediaBase> GetMedia(ICollection<ContentPresenter> media)
         {
             List<InputMediaBase> mediaList = new List<InputMediaBase>(media.Count);
 
             Parallel.ForEach(media, item =>
             {
-                mediaList.Add(GetSpecifiedMedia(item));
+                mediaList.Add(_Helper.CreateMedia(item) ?? throw new NullReferenceException());
             });
 
             return mediaList;
@@ -29,7 +32,7 @@ namespace JajaSithTgBot.Bot
                     mediaTable.Add(item.Tag, new List<IAlbumInputMedia>());
                 }
 
-                ((List<IAlbumInputMedia>)mediaTable[item.Tag]).Add((IAlbumInputMedia)GetSpecifiedMedia(item));
+                ((List<IAlbumInputMedia>)mediaTable[item.Tag]).Add((IAlbumInputMedia?)_Helper.CreateMedia(item) ?? throw new NullReferenceException());
             }
 
             return mediaTable;

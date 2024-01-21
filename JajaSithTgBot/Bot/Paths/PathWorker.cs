@@ -1,4 +1,5 @@
 ﻿using JajaSithTgBot.Bot.Extensions;
+using Microsoft.VisualBasic.FileIO;
 using System.Text;
 
 namespace JajaSithTgBot.Bot.Paths
@@ -10,6 +11,7 @@ namespace JajaSithTgBot.Bot.Paths
         public static string? Logs { get; private set; }
         public static string? Content { get; private set; }
         public static string? Telegram { get; private set; }
+        public static string? Media { get; private set; }
 
         static PathWorker() { InitializePaths(); }
 
@@ -25,6 +27,14 @@ namespace JajaSithTgBot.Bot.Paths
             Logs = Path.Combine(ApplicationPath, "Data\\Logs");
             Content = Path.Combine(ApplicationPath, "Data\\Content");
             Telegram = Path.Combine(ApplicationPath, "Data\\Telegram");
+            Media = Path.Combine(ApplicationPath, "Data\\Types\\Media");
+        }
+
+        public static void RenameDirectory(DirectoryInfo? directory,string? newName)
+        {
+            if(directory == null || newName == null) return;
+
+            FileSystem.RenameDirectory(directory.FullName, newName);
         }
     }
 }

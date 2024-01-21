@@ -8,7 +8,7 @@ namespace JajaSithTgBot.Bot.Logging
     {
         public void Log(object message)
         {
-            using Stream stream = new FileStream(Path.Combine(PathWorker.Logs, $"Log-{DateTime.Now.ToShortDateString('-')}"), FileMode.OpenOrCreate);
+            using Stream stream = new FileStream(Path.Combine(PathWorker.Logs, $"Log-{DateTime.Now.ToShortDateString('-')}.txt"), FileMode.OpenOrCreate);
 
             stream.Position = stream.Seek(stream.Length, SeekOrigin.Begin);
             stream.Write(Encoding.Unicode.GetBytes($"{message}"));

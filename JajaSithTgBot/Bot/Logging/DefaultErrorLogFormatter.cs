@@ -6,18 +6,16 @@ namespace JajaSithTgBot.Bot.Logging
     {
         public object Format(object message)
         {
-            Exception? ex = message as Exception;
-
-            if (ex == null)
+            if (message is not Exception ex)
                 return message.ToString() ?? throw new ArgumentNullException(nameof(message));
 
             StringBuilder ErrorMessage = new StringBuilder();
 
             ErrorMessage.Append($"\n[{DateTime.Now.ToShortTimeString()}] : ");
-            ErrorMessage.Append($"\t\tAn exception has occured - {ex.Message}\n");
-            ErrorMessage.Append($"\t\tSource : {ex.Source}");
-            ErrorMessage.Append($"\t\tStack trace : {ex.StackTrace}");
-            ErrorMessage.AppendLine(new string('-', 20));
+            ErrorMessage.AppendLine($"An exception has occured - {ex.Message}");
+            ErrorMessage.AppendLine($" Source : {ex.Source}");
+            ErrorMessage.AppendLine($" Stack trace : {ex.StackTrace}");
+            ErrorMessage.AppendLine(new string('-', 100));
 
             return ErrorMessage.ToString();
         }

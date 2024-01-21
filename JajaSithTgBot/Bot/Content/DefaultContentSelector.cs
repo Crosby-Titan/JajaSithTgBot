@@ -1,5 +1,6 @@
 ﻿using JajaSithTgBot.Bot.Extensions;
 using JajaSithTgBot.Bot.Paths;
+using Microsoft.VisualBasic.FileIO;
 
 namespace JajaSithTgBot.Bot.Content
 {
@@ -23,7 +24,10 @@ namespace JajaSithTgBot.Bot.Content
             foreach (DirectoryInfo dir in directoryInfo.GetDirectories())
             {
                 if (dir.Name == destinationTime.ToShortDateString('-'))
+                {
                     content.Add(_Downloader.LoadContent(dir.FullName));
+                }
+
             }
 
             return content;

@@ -35,7 +35,5 @@ namespace JajaSithTgBot.Bot.Handlers
 
             });
         }
-
-
     }
 }
