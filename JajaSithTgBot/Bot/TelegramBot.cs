@@ -4,6 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using JajaSithTgBot.Bot.Logging;
+using JajaSithTgBot.Bot.Types.Builders;
 
 namespace JajaSithTgBot.Bot
 {
@@ -34,7 +35,9 @@ namespace JajaSithTgBot.Bot
                         ChatId = ChatId,
                         LogFormatter = new DefaultErrorLogFormatter(),
                         Logger = new DefaultLogger(),
-                        ResponseHandler = new ResponseHandler(new DefaultPostHandler(), new DefaultContentSelector(), ChatId)
+                        ResponseHandler = new ResponseHandlerBuilder()
+                        .UseAnother(_ChatID)
+                        .Build()
                     };
 
                     return _Handler;

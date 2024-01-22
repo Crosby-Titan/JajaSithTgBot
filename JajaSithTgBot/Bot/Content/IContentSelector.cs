@@ -1,6 +1,8 @@
-﻿namespace JajaSithTgBot.Bot.Content
+﻿using JajaSithTgBot.Bot.Handlers;
+
+namespace JajaSithTgBot.Bot.Content
 {
-    public interface IContentSelector
+    public interface IContentSelector: IResponseHandlerModule
     {
         bool IsContentAvailable(string cathegory, DateTime destinationTime);
 

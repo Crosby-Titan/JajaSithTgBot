@@ -1,38 +1,45 @@
 ﻿using JajaSithTgBot.Bot.Content;
+using JajaSithTgBot.Bot.Panels;
 using System.Dynamic;
 using System.Text.Json;
+using System.Threading.Channels;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace JajaSithTgBot.Bot.Handlers
 {
-    public class ResponseHandler
+    public sealed class ResponseHandler: IResponseHandler
     {
         private readonly IPostHandler _PostHandler;
         private readonly IContentSelector _ContentSelector;
-        private readonly ChatId _ChatId;
+        private readonly IControlPanel _AdminPanel;
+        private readonly IControlPanel _UserPanel;
+        private ChatId? _ChatId;
         private List<string>? _SuperUsers;
 
-        public ResponseHandler(IPostHandler postHandler, IContentSelector selector, ChatId channel)
+        internal ResponseHandler(IPostHandler postHandler, IContentSelector selector,IControlPanel[] panels)
         {
             _PostHandler = postHandler ?? throw new ArgumentNullException(nameof(postHandler));
             _ContentSelector = selector ?? throw new ArgumentNullException(nameof(selector));
-            _ChatId = channel ?? throw new ArgumentNullException(nameof(channel));
+            _AdminPanel = panels[0] ?? throw new ArgumentNullException(nameof(panels));
+            _UserPanel = panels[1] ?? throw new ArgumentNullException(nameof(panels));
             LoadSuperUsers();
         }
 
-        public void Handle(ITelegramBotClient botClient, ChatId id, string message, string username)
+        public ChatId? ChatId { get { return _ChatId; } set => _ChatId = value ?? throw new NullReferenceException(); }
+
+        public void Handle(ITelegramBotClient botClient,Message message)
         {
-            if (!IsUserAdnim(username))
+            
+        }
+
+        public async Task HandleAsync(ITelegramBotClient client, Message message)
+        {
+            await Task.Factory.StartNew(() =>
             {
-                botClient.SendTextMessageAsync(id, "Access denied");
-                return;
-            }
-
-            AdminCommands(botClient, id, message);
-
-            SendReplyMarkUp(botClient, id, GetAdminKeyBoardPanel());
+                Handle(client, message);
+            });
         }
 
         private void AdminCommands(ITelegramBotClient botClient, ChatId id, string message)
@@ -105,9 +112,10 @@ namespace JajaSithTgBot.Bot.Handlers
             });
         }
 
-        private static void SendReplyMarkUp(ITelegramBotClient botClient, ChatId id, ReplyKeyboardMarkup markup)
+        private static void SendReplyMarkup(ITelegramBotClient botClient, ChatId id, ReplyKeyboardMarkup markup)
         {
             botClient.SendTextMessageAsync(id, "Select some option", replyMarkup: markup);
         }
+
     }
 }
