@@ -9,8 +9,11 @@
 
   <ItemGroup>
     <Compile Remove="Data\Content\арт\**" />
+    <Compile Remove="Data\Telegram\**" />
     <EmbeddedResource Remove="Data\Content\арт\**" />
+    <EmbeddedResource Remove="Data\Telegram\**" />
     <None Remove="Data\Content\арт\**" />
+    <None Remove="Data\Telegram\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Telegram\" />
     <Folder Include="Data\Logs\" />
     <Folder Include="Data\Types\Media\" />
   </ItemGroup>
