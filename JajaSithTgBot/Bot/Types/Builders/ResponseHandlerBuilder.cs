@@ -17,24 +17,17 @@ namespace JajaSithTgBot.Bot.Types.Builders
     {
         private IPostHandler? _PostHandler;
         private IContentSelector? _ContentSelector;
-        private  IControlPanel? _AdminPanel;
-        private  IControlPanel? _UserPanel;
-        [Required]
+        private List<IControlPanel?> _Panels;
         private  ChatId? _ChatId;
+
+        public ResponseHandlerBuilder()
+        {
+            _Panels = new List<IControlPanel?>();
+        }
 
         public IResponseHandler Build()
         {
-            _PostHandler ??= new DefaultPostHandler();
-            _ContentSelector ??= new DefaultContentSelector();
-            _AdminPanel ??= new AdminPanel(new Dictionary<string, IControlPanel.CommandDelegateHandler>(){
-                
-            });
-            _UserPanel ??= new UserPanel(new Dictionary<string, IControlPanel.CommandDelegateHandler>()
-            {
-
-            });
-
-            return new ResponseHandler(_PostHandler, _ContentSelector, new[] { _AdminPanel, _UserPanel })
+            return new ResponseHandler(_PostHandler, _ContentSelector, _Panels.ToArray())
             {
                 ChatId = _ChatId
             };
@@ -42,9 +35,6 @@ namespace JajaSithTgBot.Bot.Types.Builders
 
         public IResponseHandlerBuilder UseAnother<T>(T Using)
         {
-            if (Using == null)
-                throw new ArgumentNullException(nameof(Using), string.Empty);
-
             switch (Using)
             {
                 case ChatId chat:
@@ -70,12 +60,9 @@ namespace JajaSithTgBot.Bot.Types.Builders
                 case IContentSelector ContentSelector: 
                     _ContentSelector = ContentSelector;
                     break;
-                case IControlPanel panel: 
-                    
-                    if(panel.GetType() == typeof(AdminPanel))
-                        _AdminPanel = panel;
-                    else if(panel.GetType() == typeof(UserPanel))
-                        _UserPanel = panel;
+                case IControlPanel panel:
+
+                    _Panels.Add(panel);
 
                     break;
                 default:

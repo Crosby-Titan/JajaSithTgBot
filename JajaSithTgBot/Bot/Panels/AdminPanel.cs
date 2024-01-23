@@ -15,8 +15,6 @@ namespace JajaSithTgBot.Bot.Panels
 {
     public class AdminPanel : ControlPanel
     {
-        private IDictionary<string, IControlPanel.CommandDelegateHandler> _Commands;
-
         public AdminPanel(IDictionary<string, IControlPanel.CommandDelegateHandler> commands)
         {
             _Commands = commands ?? throw new ArgumentNullException(nameof(commands));

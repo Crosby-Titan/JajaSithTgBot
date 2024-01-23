@@ -15,6 +15,7 @@ namespace JajaSithTgBot.Bot.Panels
 {
     public abstract class ControlPanel : IControlPanel
     {
+        protected internal IDictionary<string, IControlPanel.CommandDelegateHandler> _Commands;
         public abstract ReplyKeyboardMarkup GetKeyboardPanel();
         public abstract void Process(ITelegramBotClient botClient, Message message, IResponseHandlerModule? module = null, ChatId? redirectResponseTo = null);
         public abstract Task ProcessAsync(ITelegramBotClient botClient, Message message, IResponseHandlerModule? module = null, ChatId? redirectResponseTo = null);

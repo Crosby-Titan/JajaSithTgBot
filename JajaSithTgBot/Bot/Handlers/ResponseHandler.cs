@@ -1,5 +1,6 @@
 ﻿using JajaSithTgBot.Bot.Content;
 using JajaSithTgBot.Bot.Panels;
+using JajaSithTgBot.Bot.Panels.UserTypes;
 using System.Dynamic;
 using System.Text.Json;
 using System.Threading.Channels;
@@ -13,18 +14,18 @@ namespace JajaSithTgBot.Bot.Handlers
     {
         private readonly IPostHandler _PostHandler;
         private readonly IContentSelector _ContentSelector;
-        private readonly IControlPanel _AdminPanel;
-        private readonly IControlPanel _UserPanel;
+        private readonly ControlPanel _AdminPanel;
+        private readonly ControlPanel _UserPanel;
         private ChatId? _ChatId;
-        private List<string>? _SuperUsers;
+        private ICollection<Panels.UserTypes.User> _SuperUsers;
 
-        internal ResponseHandler(IPostHandler postHandler, IContentSelector selector,IControlPanel[] panels)
+        internal ResponseHandler(IPostHandler postHandler, IContentSelector selector,ControlPanel[] panels)
         {
             _PostHandler = postHandler ?? throw new ArgumentNullException(nameof(postHandler));
             _ContentSelector = selector ?? throw new ArgumentNullException(nameof(selector));
             _AdminPanel = panels[0] ?? throw new ArgumentNullException(nameof(panels));
             _UserPanel = panels[1] ?? throw new ArgumentNullException(nameof(panels));
-            LoadSuperUsers();
+            _SuperUsers = UserHelper.GetAdmins("telegram_bot_access_users.json");
         }
 
         public ChatId? ChatId { get { return _ChatId; } set => _ChatId = value ?? throw new NullReferenceException(); }
@@ -32,6 +33,17 @@ namespace JajaSithTgBot.Bot.Handlers
         public void Handle(ITelegramBotClient botClient,Message message)
         {
             
+            if(_SuperUsers.Any(x=> x.UserName == $"{message.From.Username}"))
+            {
+                _AdminPanel.Process
+            }
+
+            var user = new Panels.UserTypes.User(message.From.IsBot ? UserType.Bot : UserType.User, message.From.Username);
+
+            if(UserHelper.IsUser(UserType.User,user))
+            {
+                
+            }
         }
 
         public async Task HandleAsync(ITelegramBotClient client, Message message)
@@ -85,31 +97,6 @@ namespace JajaSithTgBot.Bot.Handlers
         private void UserCommands(ITelegramBotClient botClient,ChatId id,string message)
         {
 
-        }
-
-        private bool IsUserAdnim(string username)
-        {
-            if (_SuperUsers == null) return false;
-
-            if (_SuperUsers.Contains(username)) return true;
-
-            return false;
-        }
-
-        private void LoadSuperUsers()
-        {
-            dynamic? value = JsonSerializer.Deserialize<ExpandoObject>(System.IO.File.OpenRead(Path.Combine(Paths.PathWorker.Telegram, "telegram_bot_access_users.json")));
-
-            _SuperUsers = JSON.JsonParser.GetSpecifiedData(value?.allowed_users) ?? new List<string>();
-        }
-
-        protected internal static ReplyKeyboardMarkup GetAdminKeyBoardPanel()
-        {
-            return new ReplyKeyboardMarkup(new[]
-            {
-                new KeyboardButton[] { new KeyboardButton("Check media") },
-                new KeyboardButton[] { new KeyboardButton("Post media") }
-            });
         }
 
         private static void SendReplyMarkup(ITelegramBotClient botClient, ChatId id, ReplyKeyboardMarkup markup)
