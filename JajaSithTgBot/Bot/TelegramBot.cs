@@ -1,5 +1,4 @@
 ﻿using JajaSithTgBot.Bot.Handlers;
-using JajaSithTgBot.Bot.Content;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;

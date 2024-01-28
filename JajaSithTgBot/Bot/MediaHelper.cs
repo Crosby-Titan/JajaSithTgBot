@@ -1,7 +1,6 @@
 ﻿using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using JajaSithTgBot.Bot.Content;
-using System.Runtime.CompilerServices;
 using JajaSithTgBot.Bot.Extensions;
 
 namespace JajaSithTgBot.Bot
@@ -37,7 +36,7 @@ namespace JajaSithTgBot.Bot
 
             return mediaTable;
         }
-
+        [Obsolete($"Use {nameof(MediaHelperExtension.CreateMedia)} instead")]
         public static InputMediaBase GetSpecifiedMedia(ContentPresenter media)
         {
             switch (media.MediaType)

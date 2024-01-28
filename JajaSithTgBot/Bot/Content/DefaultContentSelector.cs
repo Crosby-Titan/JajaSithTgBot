@@ -44,6 +44,9 @@ namespace JajaSithTgBot.Bot.Content
         {
             bool isContentAvailable = false;
 
+            if (!info.Exists)
+                return isContentAvailable;
+
             foreach (DirectoryInfo dir in info.GetDirectories())
             {
                 if (dir.Name == destinationTime.ToShortDateString('-'))

@@ -1,33 +1,22 @@
-﻿using JajaSithTgBot.Bot.Content;
-using JajaSithTgBot.Bot.Handlers;
+﻿using JajaSithTgBot.Bot.Handlers;
 using JajaSithTgBot.Bot.Panels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace JajaSithTgBot.Bot.Types.Builders
 {
     public class ResponseHandlerBuilder : IResponseHandlerBuilder
     {
-        private IPostHandler? _PostHandler;
-        private IContentSelector? _ContentSelector;
-        private List<IControlPanel?> _Panels;
+        private List<ControlPanel?> _Panels;
         private  ChatId? _ChatId;
 
         public ResponseHandlerBuilder()
         {
-            _Panels = new List<IControlPanel?>();
+            _Panels = new List<ControlPanel?>();
         }
 
         public IResponseHandler Build()
         {
-            return new ResponseHandler(_PostHandler, _ContentSelector, _Panels.ToArray())
+            return new ResponseHandler(_Panels.ToArray())
             {
                 ChatId = _ChatId
             };
@@ -54,15 +43,9 @@ namespace JajaSithTgBot.Bot.Types.Builders
 
             switch(Using)
             {
-                case IPostHandler PostHandler:
-                    _PostHandler = PostHandler;
-                    break;
-                case IContentSelector ContentSelector: 
-                    _ContentSelector = ContentSelector;
-                    break;
                 case IControlPanel panel:
 
-                    _Panels.Add(panel);
+                    _Panels.Add((ControlPanel)panel);
 
                     break;
                 default:

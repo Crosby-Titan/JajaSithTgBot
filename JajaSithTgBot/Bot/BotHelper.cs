@@ -17,11 +17,12 @@ namespace JajaSithTgBot.Bot
             _Loader = new DataLoader();
         }
 
-        public static async Task Start(TelegramSettings? settings, ReceiverOptions? options = default)
+        public static async Task Start(ReceiverOptions? options = default)
         {
-            InitializeBot(settings ?? throw new NullReferenceException(nameof(settings)));
+            if (_Bot == null) 
+                throw new NullReferenceException();
 
-            await _Bot.StartReceiveAsync();
+            await _Bot.StartReceiveAsync(options);
         }
 
         public static void Stop()
@@ -29,8 +30,11 @@ namespace JajaSithTgBot.Bot
             _Bot?.Dispose();
         }
 
-        private static void InitializeBot(TelegramSettings settings, IHandler? handler = default)
+        public static void InitializeBot(TelegramSettings? settings, IHandler? handler = default)
         {
+            if (settings == null)
+                throw new NullReferenceException();                
+
             if (!SettingsValidator.Validate<TelegramSettings, SettingsValidationAttribute>(settings))
                 throw new ArgumentException(null, nameof(settings));
 

@@ -26,18 +26,14 @@ namespace JajaSithTgBot.Bot.Handlers
         public IResponseHandler? ResponseHandler { get; set; }
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            await Task.Factory.StartNew(() =>
+            switch (update?.Message)
             {
-                switch (update?.Message)
-                {
-                    case not null:
-                        ResponseHandler.Handle(botClient, update.Message);
-                        break;
-                    default:
-                        break;
-                }
-
-            }, cancellationToken);
+                case not null:
+                    await ResponseHandler.HandleAsync(botClient, update.Message);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception ex, CancellationToken cancellationToken)

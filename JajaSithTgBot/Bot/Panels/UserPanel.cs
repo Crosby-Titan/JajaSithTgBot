@@ -1,42 +1,41 @@
-﻿using JajaSithTgBot.Bot.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace JajaSithTgBot.Bot.Panels
 {
     public class UserPanel : ControlPanel
     {
-        private IDictionary<string, IControlPanel.CommandDelegateHandler> _Commands;
-
-        public UserPanel(IDictionary<string, IControlPanel.CommandDelegateHandler> commands)
+        public UserPanel()
         {
-            _Commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            _Commands = GetDefaultCommands();
         }
 
-        public override ReplyKeyboardMarkup GetKeyboardPanel()
+        public UserPanel(IDictionary<string, IControlPanel.CommandDelegateHandler> commands): this()
         {
-            throw new NotImplementedException();
+            if(commands == null)
+                throw new ArgumentNullException(nameof(commands));
+
+            AddCommandRange(commands);
         }
 
-        public override void Process(ITelegramBotClient botClient, Message message, IResponseHandlerModule? module = default, ChatId? redirectResponseTo = null)
+        public override void Process(ITelegramBotClient botClient, Message message,bool IsRequestResultRedirected = false, ChatId? redirectResponseTo = null)
         {
             _Commands.TryGetValue(message?.Text ?? string.Empty, out var action);
 
-            action?.Invoke(botClient, redirectResponseTo ?? message.Chat.Id, module);
+            action?.Invoke(botClient, message.Chat.Id, IsRequestResultRedirected, IsRequestResultRedirected ? redirectResponseTo ?? throw new NullReferenceException() : redirectResponseTo);
         }
 
-        public override async Task ProcessAsync(ITelegramBotClient botClient, Message message, IResponseHandlerModule? module = default, ChatId? redirectResponseTo = null)
+        public override async Task ProcessAsync(ITelegramBotClient botClient, Message message, bool IsRequestResultRedirected = false, ChatId? redirectResponseTo = null)
         {
             await Task.Factory.StartNew(() =>
             {
-                Process(botClient, message, module ,redirectResponseTo);
+                Process(botClient, message,IsRequestResultRedirected, redirectResponseTo);
             });
+        }
+
+        public override IEnumerable<BotCommand> GetBotCommands()
+        {
+            return _Commands.Keys.Select(xkey => new BotCommand() { Command = xkey, Description = xkey });
         }
     }
 }

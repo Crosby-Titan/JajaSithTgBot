@@ -18,7 +18,7 @@ namespace JajaSithTgBot.Bot.Types.Reflection
             {
                 if(type.Name == name)
                 {
-                    return FindClass(type, ctorParameters, ctorParamTypes);
+                    return type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, ctorParamTypes)?.Invoke(ctorParameters);
                 }
             }
 
@@ -30,7 +30,7 @@ namespace JajaSithTgBot.Bot.Types.Reflection
             return type.GetMethod(methodName, flags)?.Invoke(obj, parameters);
         }
 
-        private static object? FindClass(Type targetType, object?[]? ctorParameters, Type[] ctorParamTypes)
+        public static object? CreateClass(Type targetType, object?[]? ctorParameters, Type[] ctorParamTypes)
         {
             var assembly = Assembly.GetExecutingAssembly();
 
