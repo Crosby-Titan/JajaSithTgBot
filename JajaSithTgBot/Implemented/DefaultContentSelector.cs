@@ -9,6 +9,7 @@ namespace JajaSithTgBot.Implemented
     public class DefaultContentSelector : IContentSelector
     {
         private IContentDownloader _Downloader;
+        private bool _IsContentAvailable = false;
 
         public DefaultContentSelector()
         {
@@ -17,7 +18,7 @@ namespace JajaSithTgBot.Implemented
 
         public ICollection<ICollection<ContentPresenter>> GetContent(string cathegoryName, DateTime destinationTime)
         {
-            if (!IsContentAvailable(cathegoryName, destinationTime))
+            if (!_IsContentAvailable)
                 return Array.Empty<ICollection<ContentPresenter>>();
 
             DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(PathWorker.Content, cathegoryName));
@@ -44,18 +45,17 @@ namespace JajaSithTgBot.Implemented
 
         private bool IsUploadedContentAvailable(DirectoryInfo info, DateTime destinationTime)
         {
-            bool isContentAvailable = false;
 
             if (!info.Exists)
-                return isContentAvailable;
+                return _IsContentAvailable;
 
             foreach (DirectoryInfo dir in info.GetDirectories())
             {
                 if (dir.Name == destinationTime.ToShortDateString('-'))
-                    isContentAvailable = true;
+                    _IsContentAvailable = true;
             }
 
-            return isContentAvailable;
+            return _IsContentAvailable;
         }
     }
 }

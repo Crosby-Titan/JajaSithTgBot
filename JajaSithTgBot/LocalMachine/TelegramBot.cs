@@ -3,7 +3,7 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
-namespace Bot
+namespace JajaSithTgBot.LocalMachine
 {
     public class TelegramBot : IDisposable
     {
@@ -19,6 +19,10 @@ namespace Bot
             _ChatID = pinnedChannel ?? throw new ArgumentNullException(nameof(pinnedChannel));
             _CancelToken = new CancellationTokenSource();
         }
+
+        internal ITelegramBotClient Client { get { return _Client; } }
+
+        internal CancellationToken CancellationToken { get { return _CancelToken.Token; } }
 
         public ChatId ChatId { get { return new ChatId(_ChatID.Username ?? throw new ArgumentException()); } }
 

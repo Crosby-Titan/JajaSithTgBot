@@ -2,6 +2,7 @@
 using Bot.Attributes;
 using Bot.Handlers;
 using JajaSithTgBot.Implemented.Parsing;
+using JajaSithTgBot.LocalMachine;
 using JajaSithTgBot.Paths;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
