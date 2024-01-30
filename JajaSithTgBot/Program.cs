@@ -1,8 +1,9 @@
-﻿using JajaSithTgBot.Bot;
-using JajaSithTgBot.Bot.Handlers;
-using JajaSithTgBot.Bot.Logging;
-using JajaSithTgBot.Bot.Panels;
-using JajaSithTgBot.Bot.Types.Builders;
+﻿using Bot.Logging;
+using JajaSithTgBot.Implemented.Commands;
+using JajaSithTgBot.Implemented.Handlers;
+using JajaSithTgBot.Implemented.Logging;
+using JajaSithTgBot.Implemented.Panels;
+using JajaSithTgBot.Implemented.Patterns.Builders;
 using Telegram.Bot.Types;
 
 namespace JajaSithTgBot
@@ -16,6 +17,12 @@ namespace JajaSithTgBot
             try
             {
                 var settings = BotHelper.LoadSettigs("telegram_info.json");
+                ChatId chatID;
+
+                if(settings.Information.ChannelID.Contains('@'))
+                    chatID = new ChatId(settings.Information.ChannelID);
+                else
+                    chatID = new ChatId(long.Parse(settings.Information.ChannelID));
 
                 BotHelper.InitializeBot(settings, new DefaultHandlers()
                 {
@@ -24,7 +31,7 @@ namespace JajaSithTgBot
                     ResponseHandler = new ResponseHandlerBuilder()
                      .UseModule(new AdminPanel(Commands.GetAdminCommands()))
                      .UseModule(new UserPanel(Commands.GetUserCommands()))
-                     .UseAnother(new ChatId(settings.Information.ChannelID))
+                     .UseAnother(chatID)
                      .Build()
                 });
                 await BotHelper.Start(new Telegram.Bot.Polling.ReceiverOptions() { AllowedUpdates = new Telegram.Bot.Types.Enums.UpdateType[]{ Telegram.Bot.Types.Enums.UpdateType.Message }});
