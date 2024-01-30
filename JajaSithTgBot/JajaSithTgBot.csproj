@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Logs\" />
+    <Folder Include="Data\Telegram\" />
     <Folder Include="Data\Types\Media\" />
   </ItemGroup>
 
